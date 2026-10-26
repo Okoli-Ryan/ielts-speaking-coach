@@ -3,20 +3,36 @@
 A mock IELTS Speaking examiner that talks to you, marks you against the four assessment
 criteria, and shows you what a higher band would have sounded like — in your own words.
 
-Powered by OpenAI (`gpt-6-astra`) over a WebSocket, with the microphone and all recordings
-handled in the browser.
+Runs on the AI provider of your choice (OpenAI or Anthropic's Claude, and others if you add
+one) over a WebSocket, with the microphone and all recordings handled in the browser.
 
 ## Setup
 
 ```bash
 npm install
-cp .env.example .env    # then paste your key into .env
+cp .env.example .env    # then paste a key for at least one provider into .env
 npm start
 ```
 
 Open <http://localhost:5173> in **Chrome or Edge** (see the note on speech recognition below).
 
-Get an API key at <https://platform.openai.com/api-keys>.
+You need a key for **at least one** provider. The model picker in the header groups models by
+provider and greys out any whose key is missing or cannot reach that model, so you can see at a
+glance what you have.
+
+| Provider | Key in `.env` | Get a key | Does |
+|---|---|---|---|
+| OpenAI | `OPENAI_API_KEY` | <https://platform.openai.com/api-keys> | examiner, marker, question papers, **and audio re-transcription** |
+| Anthropic (Claude) | `ANTHROPIC_API_KEY` | <https://console.anthropic.com/> | examiner, marker, question papers |
+
+With only an Anthropic key the app starts on a Claude model and works from the browser's
+transcript: the "Transcribe audio before marking" option is switched off, because Anthropic has
+no speech-to-text model. Add an OpenAI key later and it comes back.
+
+> **Tested status.** The OpenAI path is what the evals and the write-up ran on. The Anthropic
+> path passes its offline tests against a stand-in SDK and its request shapes were checked against
+> the SDK's typings, but it has **not been run against the live Anthropic API**, and an
+> Anthropic-only setup has not been run end to end. If you try it, tell me what breaks.
 
 ## How it works
 
@@ -271,6 +287,37 @@ models disagree, which is the fastest way to tell whether a mark is real or an a
 model's temperament.
 
 Candidates are listed in [`server/models.js`](server/models.js); add or remove them there.
+
+### Using other AI providers
+
+Every model call goes through a small provider interface in [`server/providers/`](server/providers),
+so the examiner, the paper-setter, the marker and the repair pass all run on whichever model you
+pick, from any provider. Two are built in:
+
+- `openai.js`: the Responses API for chat and structured output, plus speech-to-text.
+- `anthropic.js`: the Messages API with JSON-schema output, validated with the same zod schemas.
+
+The OpenAI provider reads `OPENAI_BASE_URL`, so it can in principle point at another service that
+implements OpenAI's Responses API, with that service's model ids added to the catalog under
+`provider: "openai"`. This is untested, and many "OpenAI-compatible" servers only implement the older
+chat completions API, which this provider does not use.
+
+To add a different provider, write one file that exports a factory returning
+`{ id, label, keyEnv, configured(), listModels(), parse(), stream() }`, add it to
+[`server/providers/index.js`](server/providers/index.js), and add its models to
+`MODEL_CATALOG`. The dropdown, availability checks and evals pick it up with no other change.
+
+The marker's bands are not interchangeable between models. Before trusting a new model's marks,
+run the marker eval on it:
+
+```bash
+npm run eval -- marker --model claude-sonnet-5-5
+npm run eval -- repair --model claude-sonnet-5-5
+```
+
+The Claude entries ship **untested as markers**: the evals above were built and run against
+OpenAI models, and the Anthropic provider has so far been exercised only against a stand-in SDK
+in the test suite (`npm test`), not against the live API.
 
 ## Waiting, and the clocks
 

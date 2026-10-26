@@ -5,6 +5,7 @@
  *   npm run eval -- repair             one eval (repair | transcribe | marker | disagreement)
  *   npm run eval -- repair --runs 3    repeat each repair case, to see variance
  *   npm run eval -- --model gpt-5.6-terra
+ *   npm run eval -- marker --model claude-sonnet-5-5   any provider with a key in .env
  *   npm run eval -- repair --variant naive   negative control: should FAIL
  *   npm run eval -- transcribe --variant primed   verbatim-example prompt, to compare
  *
@@ -13,8 +14,9 @@
  */
 import "dotenv/config";
 
-import { DEFAULT_MODEL } from "../server/models.js";
-import { client, saveResult } from "./lib/harness.js";
+import { MODEL_CATALOG, defaultModelId, resolveModel } from "../server/models.js";
+import { providers, getProvider } from "../server/providers/index.js";
+import { saveResult } from "./lib/harness.js";
 import * as repair from "./repair.eval.js";
 import * as transcribe from "./transcribe.eval.js";
 import * as marker from "./marker.eval.js";
@@ -48,7 +50,10 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
-const modelId = values.model || DEFAULT_MODEL;
+const modelId = values.model || defaultModelId(providers);
+if (values.model && !MODEL_CATALOG.some((m) => m.id === values.model)) {
+  usage(`Unknown model "${values.model}". Choose from: ${MODEL_CATALOG.map((m) => m.id).join(", ")}.`);
+}
 const runs = Number(values.runs ?? 1);
 const variant = values.variant;
 if (!Number.isInteger(runs) || runs < 1) usage(`--runs must be a whole number of at least 1, got "${values.runs}".`);
@@ -56,10 +61,10 @@ if (variant && !Object.values(VARIANTS).flat().includes(variant)) usage(`Unknown
 const unknown = wanted.filter((w) => !ALL.some((e) => e.name === w));
 if (unknown.length) usage(`Unknown eval: ${unknown.join(", ")}.`);
 
-if (!process.env.OPENAI_API_KEY) {
-  console.error("OPENAI_API_KEY is not set. Add it to .env first.");
-  process.exit(2);
-}
+// Each eval needs a key for the provider it calls: the chosen model's for repair and
+// marker, OpenAI's for transcription (Anthropic has no speech-to-text).
+const provider = providers.find((p) => p.id === resolveModel(modelId, providers).provider);
+const needs = { repair: provider, marker: provider, transcribe: getProvider("openai") };
 
 const selected = wanted.length ? ALL.filter((e) => wanted.includes(e.name)) : ALL;
 
@@ -71,10 +76,15 @@ let skipped = 0;
 
 for (const evalModule of selected) {
   console.log(`\n== ${evalModule.name} ==`);
+  const keyHolder = needs[evalModule.name];
+  if (keyHolder && !keyHolder.configured()) {
+    console.log(`  skipped: ${keyHolder.keyEnv} is not set (this eval calls ${keyHolder.label}).`);
+    skipped++;
+    continue;
+  }
   let result;
   try {
     result = await evalModule.run({
-      client: client(),
       modelId,
       runs,
       variant: usesVariant(evalModule.name) ? variant : undefined,

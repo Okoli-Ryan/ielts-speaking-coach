@@ -1826,14 +1826,23 @@ async function init() {
     : usable[0]?.id || cfg.defaultModel;
   state.model = usable.some((m) => m.id === saved) ? saved : fallback;
 
+  // One group per provider. A model is greyed out when its provider has no key or the
+  // key cannot reach it, and the tooltip says which.
   const select = $("#model-select");
-  select.innerHTML = cfg.models
-    .map(
-      (m) =>
-        `<option value="${esc(m.id)}" title="${esc(m.note)}"${m.available ? "" : " disabled"}>${esc(
-          m.label
-        )}${m.available ? "" : " — no access"}</option>`
-    )
+  const groups = [...new Set(cfg.models.map((m) => m.providerLabel))];
+  select.innerHTML = groups
+    .map((label) => {
+      const options = cfg.models
+        .filter((m) => m.providerLabel === label)
+        .map(
+          (m) =>
+            `<option value="${esc(m.id)}" title="${esc(m.available ? m.note : m.reason || "")}"${m.available ? "" : " disabled"}>${esc(
+              m.label
+            )}${m.available ? "" : " (unavailable)"}</option>`
+        )
+        .join("");
+      return `<optgroup label="${esc(label)}">${options}</optgroup>`;
+    })
     .join("");
   select.value = state.model;
   select.onchange = () => {
@@ -1894,7 +1903,28 @@ async function init() {
     hint.push(
       "<strong>Speech recognition is unavailable in this browser.</strong> Use Chrome or Edge for live speech to text. Recording still works."
     );
-  if (!cfg.hasKey) hint.push("<strong>No OPENAI_API_KEY set.</strong> Add one to .env and restart.");
+  const keyNames = cfg.providers.map((p) => p.keyEnv).join(" or ");
+  if (!cfg.hasKey) {
+    hint.push(`<strong>No API key is set.</strong> Add ${esc(keyNames)} to .env and restart.`);
+  } else {
+    const missing = cfg.providers.filter((p) => !p.configured);
+    if (missing.length) {
+      hint.push(
+        `Also available with a key: ${missing.map((p) => `${esc(p.label)} (<code>${esc(p.keyEnv)}</code>)`).join(", ")}.`
+      );
+    }
+  }
+  // Only OpenAI offers speech-to-text. Without its key the app still runs, on the
+  // browser transcript, so the audio-reading controls are switched off rather than failing.
+  if (!cfg.canTranscribe) {
+    const box = $("#auto-transcribe");
+    box.checked = false;
+    box.disabled = true;
+    box.title = "Needs OPENAI_API_KEY: Anthropic has no speech-to-text model.";
+    $("#btn-retranscribe").disabled = true;
+    $("#btn-retranscribe").title = box.title;
+    hint.push("Re-reading your recordings needs <code>OPENAI_API_KEY</code>. Marking will use the browser transcript.");
+  }
   hint.push(
     "Model is switchable in the header and applies to your next request, mid-test included. Recordings stay in this browser."
   );

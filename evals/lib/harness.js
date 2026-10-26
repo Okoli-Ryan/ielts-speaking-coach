@@ -4,12 +4,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import OpenAI from "openai";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const RESULTS_DIR = path.join(here, "..", "results");
-
-export const client = () => new OpenAI();
 
 /**
  * Runs `fn` over `items`, at most `limit` at a time, keeping input order. A failing

@@ -10,6 +10,7 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { resolveModel } from "../server/models.js";
+import { providers } from "../server/providers/index.js";
 import { repairTurns } from "../server/core.js";
 import { normalise, containsPhrase } from "./lib/text.js";
 import { mapLimit, pct } from "./lib/harness.js";
@@ -71,8 +72,8 @@ export function scoreCase(fixture, corrected) {
 
 export const name = "repair";
 
-export async function run({ client, modelId, runs = 1, variant, log }) {
-  const model = resolveModel(modelId);
+export async function run({ modelId, runs = 1, variant, log }) {
+  const model = resolveModel(modelId, providers);
   // The naive prompt is a negative control: the eval is only worth having if it fails this.
   const instructions = variant === "naive" ? { instructions: NAIVE_REPAIR_PROMPT } : undefined;
   const jobs = cases.flatMap((fixture) => Array.from({ length: runs }, () => fixture));
@@ -80,12 +81,12 @@ export async function run({ client, modelId, runs = 1, variant, log }) {
   const outcomes = await mapLimit(jobs, 4, async (fixture) => {
     let response;
     try {
-      response = await repairTurns(client, model, fixture.turns, instructions);
+      response = await repairTurns(model, fixture.turns, instructions);
     } catch (err) {
       log(`  ${fixture.id}: ERROR ${err.message}`);
       return { id: fixture.id, error: err.message };
     }
-    const byIndex = new Map(response.output_parsed.turns.map((t) => [t.index, t.corrected]));
+    const byIndex = new Map(response.data.turns.map((t) => [t.index, t.corrected]));
     // A missing index is a failure to return the turn, not a pass by omission.
     const corrected = fixture.turns.map((original, i) => byIndex.get(i) ?? "");
     const score = scoreCase(fixture, corrected);

@@ -15,6 +15,7 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { resolveModel } from "../server/models.js";
+import { providers } from "../server/providers/index.js";
 import { assessTranscript, repairTurns } from "../server/core.js";
 import { mapLimit } from "./lib/harness.js";
 
@@ -29,11 +30,11 @@ const mean = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
 
 export const name = "marker";
 
-export async function run({ client, modelId, runs = 1, log }) {
-  const model = resolveModel(modelId);
+export async function run({ modelId, runs = 1, log }) {
+  const model = resolveModel(modelId, providers);
 
   const mark = async (label, answer) => {
-    const response = await assessTranscript(client, model, {
+    const response = await assessTranscript(model, {
       part: 2,
       targetBand: fx.targetBand,
       transcript: [
@@ -41,7 +42,7 @@ export async function run({ client, modelId, runs = 1, log }) {
         { role: "candidate", text: answer },
       ],
     });
-    const a = response.output_parsed;
+    const a = response.data;
     log(`  ${label}: overall ${a.overall_band}, grammar ${a.grammatical_range.band}`);
     return { overall: a.overall_band, grammar: a.grammatical_range.band };
   };
@@ -49,8 +50,8 @@ export async function run({ client, modelId, runs = 1, log }) {
   // Repair first: the pipeline marks what the repair pass returns, not the raw noise.
   // A missing or unchanged result would make the inflation check pass for the wrong
   // reason, so either one stops the eval.
-  const repair = await repairTurns(client, model, [fx.noisyMid]);
-  const repairedMid = repair.output_parsed.turns.find((t) => t.index === 0)?.corrected;
+  const repair = await repairTurns(model, [fx.noisyMid]);
+  const repairedMid = repair.data.turns.find((t) => t.index === 0)?.corrected;
   if (!repairedMid) throw new Error("Repair returned no result for the garbled answer.");
   if (repairedMid.trim() === fx.noisyMid.trim()) {
     throw new Error("Repair changed nothing in the garbled answer, so there is nothing to test.");

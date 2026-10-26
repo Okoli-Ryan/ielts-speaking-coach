@@ -58,7 +58,7 @@ const show = ({ kept, total }) => (total ? `${kept}/${total} (${pct(kept / total
 
 export const name = "transcribe";
 
-export async function run({ client, variant, log }) {
+export async function run({ variant, log }) {
   // A variant is a candidate fix, compared against the shipped instruction prompt.
   const options = variant ? TRANSCRIBE_VARIANTS[variant] : undefined;
   const recorded = loadScripts().filter((s) =>
@@ -74,7 +74,7 @@ export async function run({ client, variant, log }) {
     try {
       const audio = fs.readFileSync(path.join(RECORDINGS_DIR, `${script.id}.webm`));
       const browser = fs.readFileSync(path.join(RECORDINGS_DIR, `${script.id}.browser.txt`), "utf8");
-      const gpt = await transcribeAudio(client, audio, options);
+      const gpt = await transcribeAudio(audio, options);
 
       const row = {
         id: script.id,
