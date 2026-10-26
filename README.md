@@ -30,10 +30,10 @@ transcript: the "Transcribe audio before marking" option is switched off, becaus
 no speech-to-text model. Add an OpenAI key later and it comes back.
 
 > **Tested status.** The OpenAI path is what the evals and the write-up ran on. **Claude Sonnet 5.5**
-> has been run live through the app (examiner turns, question papers, cue cards) and through the
-> repair and marker evals, once each; the results are in `evals/results/*.claude-sonnet-5-5.json`.
-> The other Claude models in the picker have not been run, and an Anthropic-only setup (no OpenAI
-> key at all) has not been run end to end. If you try them, tell me what breaks.
+> has been run live through the app (examiner turns, question papers, cue cards). Sonnet 5.5, Opus 5.5
+> and Haiku 5.5 have each been through the repair and marker evals, once each; the results are in
+> `evals/results/*.claude-*.json`. Claude Fable 5.1 has not been run, and an Anthropic-only setup (no
+> OpenAI key at all) has not been run end to end. If you try them, tell me what breaks.
 
 ## How it works
 
@@ -316,9 +316,20 @@ npm run eval -- marker --model claude-sonnet-5-5
 npm run eval -- repair --model claude-sonnet-5-5
 ```
 
-Only Claude Sonnet 5.5 has been checked as a marker here, once. On the same three answers it gave
-lower bands than GPT-5.6 Sol (4.5, 6 and 7 against 5.5, 7 and 7.5), so do not compare bands across
-models. The other Claude entries have not been run.
+Results so far, one run each, on the same three written answers (weak, mid, strong) and the
+eleven repair fixtures:
+
+| Model | Weak | Mid | Strong | Repair: mishearings fixed | Repair: candidate errors kept |
+|---|---|---|---|---|---|
+| GPT-5.6 Sol | 5.5 | 7 | 7.5 | 100% | 100% |
+| Claude Opus 5.5 | 5 | 6.5 | 7.5 | 100% | 100% |
+| Claude Sonnet 5.5 | 4.5 | 6 | 7 | 87.5% | 100% |
+| Claude Haiku 5.5 | 5 | 6 | 7 | 75% (at the floor) | 100% |
+
+All four ranked the answers in the right order and passed the hard checks. Every Claude model
+marked at or below GPT-5.6 Sol on every answer, so do not compare bands across models. Haiku and
+Sonnet missed "college" for "colleague" where Opus and Sol fixed it. With one sample each, half a
+band is inside the noise. Claude Fable 5.1 has not been run.
 
 ## Waiting, and the clocks
 
