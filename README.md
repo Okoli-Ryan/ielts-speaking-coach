@@ -60,6 +60,7 @@ npm run eval -- repair --runs 3          # repeat each case to see run-to-run va
 | `repair` | Does the repair pass fix the recogniser's mis-hearings and leave the candidate's errors alone? | API key |
 | `transcribe` | Browser recogniser vs `gpt-transcribe` on your own voice: word error rate, learner errors kept, fillers kept | API key and recordings |
 | `marker` | Do weak, mid and strong answers rank correctly, and does repairing a garbled transcript avoid inflating the band? | API key |
+| `disagreement` | Does comparing the browser and audio-model transcripts flag the places the audio model changed what was said? | Nothing (reads the saved `transcribe` result) |
 
 **Hard** checks fail the run (exit code 1); **soft** checks print `warn`. Results are written to
 `evals/results/`. These calls cost real money, mostly the `marker` eval, which makes six
@@ -69,6 +70,25 @@ high-effort marking calls.
 Chrome or Edge and read each of the ten lines exactly as written, mistakes and "um"s included. The
 page saves your audio and what the browser heard side by side. Audio stays in
 `evals/clips/recordings/` and is git-ignored.
+
+### Transcription options tried
+
+One speaker, ten clips, one run each, scored by `npm run eval -- transcribe [--variant ...]`. The
+browser recogniser scored 6.1% word error rate, 8/11 learner errors kept, 2/4 fillers kept.
+
+| Option | Word error rate | Learner errors kept | Fillers kept |
+|---|---|---|---|
+| `gpt-transcribe`, shipped prompt | 6.5% | 8/11 | 0/4 |
+| `gpt-transcribe` + verbatim-example prompt (`primed`) | 6.5% | 8/11 | 0/4 |
+| `gpt-transcribe` + filler `keywords` | 6.5% | 8/11 | 0/4 |
+| `gpt-transcribe` + prompt as context, `languages` (`context`) | 6.0% | 9/11 | 0/4 |
+| `gpt-4o-transcribe` | 10.4% | 9/11 | 0/4 |
+| `whisper-1` + verbatim-example prompt (`whisper`) | 5.6% | 9/11 | 3/4 |
+
+`whisper-1` follows a hesitation-style prompt best, but OpenAI lists it as deprecated, and it
+mishears words the others get right. No option kept every learner error, so the app also compares
+the browser and audio transcripts and tells the marker where they disagree (`public/align.js`).
+Errors that both transcripts lost cannot be seen this way; the `disagreement` eval counts them.
 
 ## Exam conditions
 

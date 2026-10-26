@@ -156,7 +156,7 @@ app.get("/api/reports", async (_req, res) => {
 });
 
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server, path: "/ws" });
+const wss = new WebSocketServer({ server, path: "/ws", maxPayload: 2 * 1024 * 1024 });
 
 /** Convert our transcript rows into Responses API input items. */
 function toInput(history) {
@@ -312,7 +312,12 @@ async function handleAssess(ws, msg) {
   const model = resolveModel(msg.model);
   const startedAt = Date.now();
 
-  const response = await assessTranscript(client(), model, { transcript, targetBand, part });
+  const response = await assessTranscript(client(), model, {
+    transcript,
+    targetBand,
+    part,
+    disagreements: msg.disagreements,
+  });
 
   send(ws, {
     type: "assessment",

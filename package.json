@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
-    "test": "node --test evals/lib/text.test.js evals/repair.score.test.js",
+    "test": "node --test evals/lib/text.test.js evals/repair.score.test.js evals/align.test.js",
     "eval": "node evals/run.js"
   },
   "dependencies": {

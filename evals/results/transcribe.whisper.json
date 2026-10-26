@@ -1,0 +1,441 @@
+{
+  "ranAt": "2026-10-26T11:16:00.735Z",
+  "runs": 1,
+  "model": "whisper-1",
+  "summary": {
+    "clips": 10,
+    "browserHeardNothing": 0,
+    "wer": {
+      "gpt": 0.055843776106933994,
+      "gptOnBrowserClips": 0.055843776106933994,
+      "browser": 0.060981075878101046
+    },
+    "phrasesKept": {
+      "gpt": 0.8181818181818182,
+      "browser": 0.7272727272727273
+    },
+    "fillersKept": {
+      "gpt": 0.75,
+      "browser": 0.5
+    }
+  },
+  "checks": [
+    {
+      "name": "every clip transcribed",
+      "hard": true,
+      "pass": true,
+      "detail": "0 of 10 failed"
+    },
+    {
+      "name": "gpt-transcribe beats the browser on word error rate",
+      "hard": false,
+      "pass": true,
+      "detail": "gpt 5.6% vs browser 6.1% over 10 clips"
+    },
+    {
+      "name": "learner errors survive transcription (floor 90.0%)",
+      "hard": true,
+      "pass": false,
+      "detail": "gpt 9/11 (81.8%) vs browser 8/11 (72.7%)"
+    },
+    {
+      "name": "fillers survive transcription (floor 80.0%)",
+      "hard": false,
+      "pass": false,
+      "detail": "gpt 3/4 (75.0%) vs browser 2/4 (50.0%)"
+    }
+  ],
+  "failures": [],
+  "data": [
+    {
+      "id": "01-verb-form",
+      "reference": "I am work as a software developer in a small company. Um, I have went there since three years.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "I am work as a software developer in a small company. There since three years.",
+        "wer": 0.21052631578947367,
+        "errors": 4,
+        "substitutions": 0,
+        "deletions": 4,
+        "insertions": 0,
+        "words": 19,
+        "phrases": {
+          "kept": 1,
+          "total": 2
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 1
+        }
+      },
+      "gpt": {
+        "text": "I am work as a software developer in a small company. Um, I have went there since three years.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 19,
+        "phrases": {
+          "kept": 2,
+          "total": 2
+        },
+        "fillers": {
+          "kept": 1,
+          "total": 1
+        }
+      }
+    },
+    {
+      "id": "02-recipe",
+      "reference": "My mother cook many recipe for me when I was a child. I still remember the smell of her kitchen.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "My mother cook many recipe for me when I was a child. I still remember the smell of her kitchen.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 20,
+        "phrases": {
+          "kept": 1,
+          "total": 1
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "My mother cooked many recipes for me when I was a child. I still remember the smell of her kitchen.",
+        "wer": 0.1,
+        "errors": 2,
+        "substitutions": 2,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 20,
+        "phrases": {
+          "kept": 0,
+          "total": 1
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "id": "03-colleague",
+      "reference": "I usually talk to my colleague about the weekend. He don't like football but he like music.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "I usually talk to my colleague about the weekend. He don't like football but he like music.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 17,
+        "phrases": {
+          "kept": 2,
+          "total": 2
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "I usually talk to my colleague about the weekend. He don't like football, but he like music.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 17,
+        "phrases": {
+          "kept": 2,
+          "total": 2
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "id": "04-false-start",
+      "reference": "I want to, I mean I would like to travel to, to Japan because the food is very, um, delicious.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "I want to, I mean I would like to travel to to Japan because the food is very awesome.",
+        "wer": 0.1,
+        "errors": 2,
+        "substitutions": 1,
+        "deletions": 1,
+        "insertions": 0,
+        "words": 20,
+        "phrases": {
+          "kept": 1,
+          "total": 1
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 1
+        }
+      },
+      "gpt": {
+        "text": "I want to, I mean, I would like to travel to, to Japan because the food is terrible.",
+        "wer": 0.15,
+        "errors": 3,
+        "substitutions": 1,
+        "deletions": 2,
+        "insertions": 0,
+        "words": 20,
+        "phrases": {
+          "kept": 1,
+          "total": 1
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 1
+        }
+      }
+    },
+    {
+      "id": "05-fillers",
+      "reference": "Well, you know, I think the, uh, the city is quite crowded, and, er, the traffic is terrible in the morning.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "Well, you know, I think the, uh, the city is quite crowded and uh, the traffic is terrible in the morning.",
+        "wer": 0.047619047619047616,
+        "errors": 1,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 21,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 2,
+          "total": 2
+        }
+      },
+      "gpt": {
+        "text": "Well, you know, I think the, er, the city is quite crowded and, er, the traffic is terrible in the morning.",
+        "wer": 0.047619047619047616,
+        "errors": 1,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 21,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 2,
+          "total": 2
+        }
+      }
+    },
+    {
+      "id": "06-minimal-pairs",
+      "reference": "I live near the harbour where the ships leave every morning, and I watch the sheep on the hill.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "I live near the harbour where the ships live every morning and I watch the sheep on the hill.",
+        "wer": 0.05263157894736842,
+        "errors": 1,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 19,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "I live near the harbour where the sheep live every morning and I watch the sheep on the hill.",
+        "wer": 0.10526315789473684,
+        "errors": 2,
+        "substitutions": 2,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 19,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "id": "07-articles-tense",
+      "reference": "Yesterday I buy a new phone because the old one was break. It is more fast than before.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "Yesterday I buy a new phone because the old one was brick. It is more fast than before.",
+        "wer": 0.05555555555555555,
+        "errors": 1,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 18,
+        "phrases": {
+          "kept": 2,
+          "total": 3
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "Yesterday I buy a new phone because the old one was brick. It is more fast than before.",
+        "wer": 0.05555555555555555,
+        "errors": 1,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 18,
+        "phrases": {
+          "kept": 2,
+          "total": 3
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "id": "08-fluent-control",
+      "reference": "Social media has changed the way people communicate, although it has arguably made relationships more superficial than they used to be.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "Social media has changed the way people communicate, although it has arguably made relationships more superficial than they used to be.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 21,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "Social media has changed the way people communicate, although it has arguably made relationships more superficial than they used to be.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 21,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "id": "09-technical-terms",
+      "reference": "I work with PostgreSQL and Kubernetes, and my team is based in Lagos, so we meet on Zoom every Monday.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "I work with Postgres, SQL and Kubernetes and my team is based in Lagos, so we meet on Zoom every Monday.",
+        "wer": 0.1,
+        "errors": 2,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 1,
+        "words": 20,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "I work with Postgres SQL and Kubernetes and my team is based in Lagos, so we meet on Zoom every Monday.",
+        "wer": 0.1,
+        "errors": 2,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 1,
+        "words": 20,
+        "phrases": {
+          "kept": 0,
+          "total": 0
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "id": "10-numbers-plurals",
+      "reference": "There is three bedroom in my flat, and it cost me about forty thousand naira every month, which is expensive for a student.",
+      "browserHeardNothing": false,
+      "browser": {
+        "text": "There is 3 bedroom in my flat and it's cost me about 40,000 naira every month which is expensive for a student.",
+        "wer": 0.043478260869565216,
+        "errors": 1,
+        "substitutions": 1,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 23,
+        "phrases": {
+          "kept": 1,
+          "total": 2
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      },
+      "gpt": {
+        "text": "There is three bedroom in my flat and it cost me about 40,000 Naira every month, which is expensive for a student.",
+        "wer": 0,
+        "errors": 0,
+        "substitutions": 0,
+        "deletions": 0,
+        "insertions": 0,
+        "words": 23,
+        "phrases": {
+          "kept": 2,
+          "total": 2
+        },
+        "fillers": {
+          "kept": 0,
+          "total": 0
+        }
+      }
+    }
+  ]
+}

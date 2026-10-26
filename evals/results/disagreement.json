@@ -1,0 +1,80 @@
+{
+  "ranAt": "2026-10-26T11:22:23.315Z",
+  "runs": 1,
+  "summary": {
+    "tidyings": 7,
+    "detectable": 4,
+    "caught": 4,
+    "invisible": 3,
+    "controlCaught": 0
+  },
+  "checks": [
+    {
+      "name": "every detectable tidying is flagged",
+      "hard": true,
+      "pass": true,
+      "detail": "4/4 flagged"
+    },
+    {
+      "name": "negative control: a comparison that finds nothing catches nothing",
+      "hard": true,
+      "pass": true,
+      "detail": "0 caught"
+    },
+    {
+      "name": "tidyings no comparison can see (both transcripts lost them)",
+      "hard": false,
+      "pass": false,
+      "detail": "3 of 7"
+    }
+  ],
+  "failures": [
+    "01-verb-form: \"i have went\" lost by both, so the comparison cannot see it",
+    "01-verb-form: \"filler\" lost by both, so the comparison cannot see it",
+    "04-false-start: \"filler\" lost by both, so the comparison cannot see it"
+  ],
+  "data": [
+    {
+      "clip": "01-verb-form",
+      "what": "i have went",
+      "browserHasIt": false,
+      "flagged": false
+    },
+    {
+      "clip": "01-verb-form",
+      "what": "filler",
+      "browserHasIt": false,
+      "flagged": false
+    },
+    {
+      "clip": "02-recipe",
+      "what": "cook many recipe",
+      "browserHasIt": true,
+      "flagged": true
+    },
+    {
+      "clip": "04-false-start",
+      "what": "to to japan",
+      "browserHasIt": true,
+      "flagged": true
+    },
+    {
+      "clip": "04-false-start",
+      "what": "filler",
+      "browserHasIt": false,
+      "flagged": false
+    },
+    {
+      "clip": "05-fillers",
+      "what": "filler",
+      "browserHasIt": true,
+      "flagged": true
+    },
+    {
+      "clip": "05-fillers",
+      "what": "filler",
+      "browserHasIt": true,
+      "flagged": true
+    }
+  ]
+}

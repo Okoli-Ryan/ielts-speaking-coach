@@ -24,7 +24,7 @@ import { transcribeAudio, transcribeModel } from "../server/core.js";
 import { loadScripts, RECORDINGS_DIR } from "../server/clips.js";
 import { wer, normalise, containsPhrase } from "./lib/text.js";
 import { mapLimit, pct } from "./lib/harness.js";
-import { PRIMED_TRANSCRIBE_PROMPT } from "./lib/variants.js";
+import { TRANSCRIBE_VARIANTS } from "./lib/variants.js";
 
 const FILLERS = new Set(["um", "uh", "er", "erm"]);
 const countFillers = (text) => normalise(text).split(" ").filter((w) => FILLERS.has(w)).length;
@@ -59,8 +59,8 @@ const show = ({ kept, total }) => (total ? `${kept}/${total} (${pct(kept / total
 export const name = "transcribe";
 
 export async function run({ client, variant, log }) {
-  // The primed prompt is a candidate fix, compared against the shipped instruction prompt.
-  const options = variant === "primed" ? { prompt: PRIMED_TRANSCRIBE_PROMPT } : undefined;
+  // A variant is a candidate fix, compared against the shipped instruction prompt.
+  const options = variant ? TRANSCRIBE_VARIANTS[variant] : undefined;
   const recorded = loadScripts().filter((s) =>
     fs.existsSync(path.join(RECORDINGS_DIR, `${s.id}.webm`)) &&
     fs.existsSync(path.join(RECORDINGS_DIR, `${s.id}.browser.txt`))
@@ -114,7 +114,7 @@ export async function run({ client, variant, log }) {
   });
 
   return {
-    model: transcribeModel(),
+    model: options?.model ?? transcribeModel(),
     summary: {
       clips: rows.length,
       browserHeardNothing: rows.length - browserRows.length,

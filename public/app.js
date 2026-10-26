@@ -1,6 +1,7 @@
 import { Mic, Voice, speechSupported, secureContextOk, insecureContextReason } from "./audio.js";
 import { Store, questionKey } from "./store.js";
 import { reportFor, reportForAll, ANSWER_TARGETS } from "./report.js";
+import { disagreements } from "./align.js";
 
 /* =====================================================================
    State
@@ -30,6 +31,7 @@ const state = {
   bank: null, // question-bank stats from the server
   viewing: null, // id of a past exam loaded from history, if any
   rawTranscript: null, // the untouched original, kept whenever corrections are applied
+  audioTranscript: null, // the transcript as the audio model returned it, before any repair
   corrections: [], // what a correction pass changed, for the diff view
   report: null, // the generated coaching report for the current sitting
   examConditions: true, // hide the examiner's words, as on exam day
@@ -574,6 +576,7 @@ async function persistSession() {
     assessment: state.assessment,
     runs: state.runs,
     rawTranscript: state.rawTranscript,
+    audioTranscript: state.audioTranscript,
     corrections: state.corrections,
     part2Notes: state.part2Notes,
     audioTranscribed: state.audioTranscribed,
@@ -758,6 +761,7 @@ async function startTest(mode) {
   state.runs = []; // runs belong to a transcript, so a new test clears them
   state.viewing = null; // a new sitting is never a loaded past one
   state.rawTranscript = null;
+  state.audioTranscript = null;
   state.corrections = [];
   state.part2Notes = "";
   state.audioTranscribed = false;
@@ -965,6 +969,20 @@ function transcriptForMarking() {
   return state.rawTranscript;
 }
 
+/**
+ * Where the browser's transcript and the audio model's transcript disagree, per
+ * candidate turn. Only exists once the audio has been re-read, because only then are
+ * there two transcripts of the same answers. The marker is told about these spots.
+ */
+function transcriptDisagreements() {
+  if (!state.rawTranscript || !state.audioTranscript) return [];
+  return state.audioTranscript.flatMap((turn, i) => {
+    const raw = state.rawTranscript[i];
+    if (turn.role !== "candidate" || !raw || raw.text === turn.text) return [];
+    return disagreements(raw.text, turn.text);
+  });
+}
+
 function showVersionBar() {
   $("#version-bar").classList.remove("hidden");
 }
@@ -1046,6 +1064,8 @@ async function reTranscribeFromAudio({ silent = false } = {}) {
   btn.disabled = false;
   btn.textContent = "Re-transcribe audio";
   state.audioTranscribed = true;
+  // Snapshot before any repair, so later edits are never mistaken for the audio model's.
+  if (done > 0) state.audioTranscript = state.transcript.map((t) => ({ ...t }));
   state.corrections = changes;
   showVersionBar();
   renderTranscript();
@@ -1160,6 +1180,7 @@ async function runAssessment() {
     const { data, meta } = await request({
       type: "assess",
       transcript: transcriptForMarking(),
+      disagreements: transcriptDisagreements(),
       targetBand: state.targetBand,
       part: state.parts.join(", "),
     });
@@ -1498,6 +1519,7 @@ async function openSession(id) {
   state.runs = s.runs || [];
   state.targetBand = Number(s.targetBand);
   state.rawTranscript = s.rawTranscript || null;
+  state.audioTranscript = s.audioTranscript || null;
   state.corrections = s.corrections || [];
   state.part2Notes = s.part2Notes || "";
   state.audioTranscribed = Boolean(s.audioTranscribed);

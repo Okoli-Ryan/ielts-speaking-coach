@@ -8,6 +8,7 @@ import { zodTextFormat } from "openai/helpers/zod";
 
 import { assessorSystemPrompt, repairSystemPrompt, TRANSCRIBE_PROMPT } from "./prompts.js";
 import { AssessmentSchema, RepairSchema } from "./schemas.js";
+import { formatNotes } from "../public/align.js";
 
 // Speech-to-text is a separate model family from the chat models in the picker.
 // Read per call, so it does not depend on dotenv having run before this module loaded.
@@ -35,14 +36,17 @@ export function reasoning(model, effort) {
 export async function transcribeAudio(
   client,
   audio,
-  { mime = "audio/webm", model = transcribeModel(), prompt = TRANSCRIBE_PROMPT } = {}
+  { mime = "audio/webm", model = transcribeModel(), prompt = TRANSCRIBE_PROMPT, ...extra } = {}
 ) {
   const type = mime.split(";")[0].trim();
   const file = await toFile(audio, `answer.${EXTENSIONS[type] ?? "webm"}`, { type });
   const result = await client.audio.transcriptions.create({
+    language: "en",
+    // Model-specific options (keywords, languages, ...). Pass `language: undefined` to drop
+    // the default. They are spread before the fields below, so they cannot replace the audio.
+    ...extra,
     file,
     model,
-    language: "en",
     prompt,
     response_format: "text",
   });
@@ -78,18 +82,19 @@ using the same index.\n\n${numbered}`,
 }
 
 /** Marking is the job worth paying for, so it runs at high effort on every model. */
-export async function assessTranscript(client, model, { transcript, targetBand, part }) {
+export async function assessTranscript(client, model, { transcript, targetBand, part, disagreements = [] }) {
   if (!Array.isArray(transcript)) throw new Error("assessTranscript needs a transcript array.");
   const body = transcript
     .map((t) => `${t.role === "examiner" ? "EXAMINER" : "CANDIDATE"}: ${t.text}`)
     .join("\n\n");
+  const notes = formatNotes(disagreements);
 
   const response = await client.responses.parse({
     model: model.id,
     ...reasoning(model, "high"),
     max_output_tokens: 32000,
     instructions: assessorSystemPrompt({ targetBand, part }),
-    input: [{ role: "user", content: `TRANSCRIPT\n\n${body}` }],
+    input: [{ role: "user", content: `TRANSCRIPT\n\n${body}${notes ? `\n\nTRANSCRIPT NOTES\n\n${notes}` : ""}` }],
     text: { format: zodTextFormat(AssessmentSchema, "assessment") },
   });
   return requireParsed(response, "assessment");

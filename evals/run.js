@@ -2,7 +2,7 @@
  * Runs the evals and exits non-zero if a hard check fails.
  *
  *   npm run eval                       all evals
- *   npm run eval -- repair             one eval (repair | transcribe | marker)
+ *   npm run eval -- repair             one eval (repair | transcribe | marker | disagreement)
  *   npm run eval -- repair --runs 3    repeat each repair case, to see variance
  *   npm run eval -- --model gpt-5.6-terra
  *   npm run eval -- repair --variant naive   negative control: should FAIL
@@ -18,16 +18,17 @@ import { client, saveResult } from "./lib/harness.js";
 import * as repair from "./repair.eval.js";
 import * as transcribe from "./transcribe.eval.js";
 import * as marker from "./marker.eval.js";
+import * as disagreement from "./disagreement.eval.js";
 
-const ALL = [repair, transcribe, marker];
+const ALL = [repair, transcribe, marker, disagreement];
 
 const FLAGS = ["model", "runs", "variant"];
 // Which weaker or candidate prompt each eval can be run with.
-const VARIANTS = { repair: ["naive"], transcribe: ["primed"] };
+const VARIANTS = { repair: ["naive"], transcribe: ["primed", "keywords", "context", "whisper"] };
 
 function usage(message) {
   console.error(`${message}
-Usage: npm run eval -- [${ALL.map((e) => e.name).join("|")}]... [--model id] [--runs n] [--variant naive|primed]`);
+Usage: npm run eval -- [${ALL.map((e) => e.name).join("|")}]... [--model id] [--runs n] [--variant naive|primed|keywords|context|whisper]`);
   process.exit(2);
 }
 

@@ -191,6 +191,11 @@ MARKING PROCEDURE - follow it in order:
    transcription usually signals unclear articulation; run-on transcription with no natural phrasing
    suggests flat intonation and poor chunking. State explicitly when the evidence is limited.
 6. Score only what the CANDIDATE said. Ignore the examiner's language.
+7. If TRANSCRIPT NOTES follow the transcript, they list places where two transcripts of the same
+   answer (browser recogniser and audio model) disagree, so one of them changed what was said.
+   Treat the wording at those spots as unreliable: do not award or deduct marks for grammar or
+   vocabulary there, and never quote it as evidence. A filler the audio model dropped is a
+   possible hesitation; count it towards Fluency only as a possibility, and say so.
 
 THE TARGET IS BAND ${targetBand}. This governs the whole feedback half of your output:
 - Say plainly whether they are at, above, or below band ${targetBand}, per criterion.
