@@ -1,0 +1,20 @@
+{
+  "question": "Describe a place you like to visit. You should say where it is, how often you go there, what you do there, and explain why you like it.",
+  "targetBand": 7,
+  "answers": {
+    "weak": {
+      "expected": [4.5, 5.5],
+      "text": "I want to talk about the park near my house. Is a big park and have many tree. I go there every weekend because is very good for relax. Um, my friend also like this place so we go together. We are sitting and talking and sometimes we eat some food. The park is very beautiful and very clean. I like it because is quiet. In the city is many noise and many people, so I like to go to park. I think everybody should go to park because it is good."
+    },
+    "mid": {
+      "expected": [6, 7],
+      "text": "I'd like to talk about a lake outside the city that I visited a few years ago with my cousins. It's about two hours from where I live, so we usually goes on a Saturday morning. What I really enjoy is that it's so peaceful compared with the city, which can get quite stress. We normally rent a small boat and just drift around, and then we have lunch at a little restaurant by the water. The last time I went, it rained halfway through, but we stayed anyway, which was actually fun. I'd say the main reason I like it is that it helps me switch off from work, so I come back feeling much more relaxed than when I left."
+    },
+    "strong": {
+      "expected": [7.5, 9],
+      "text": "The place I find myself returning to is a lake about two hours outside the city, which I first stumbled on by accident when a road closure forced us to take a detour. What strikes me every time is how completely it resets my head; within ten minutes of arriving I've stopped checking my phone, which, for someone who spends the whole week glued to a screen, is quite an achievement. We tend to hire a rowing boat and drift out to the middle, where the only sound is the water. I suppose what I value most is that it's unglamorous: there's no entrance fee, no souvenir stalls, and that lack of fuss is precisely what makes it feel authentic."
+    }
+  },
+  "noisyMid": "I'd like to talk about a lake outside the city that I visited a few years ago with my cozens. It's about two hours from where I live, so we usually goes on a Saturday morning. What I really enjoy is that it's so peaceful compared with the city, which can get quite stress full. We normally rent a small boat and just drift a round, and then we have lunch at a little rest rent by the water. The last time I went, it rained halfway through, but we stayed anyway, which was actually fun. I'd say the main reason I like it is that it helps me which off from work, so I come back feeling much more relaxed than when I left.",
+  "tidiedWeak": "I want to talk about the park near my house. It is a big park and it has many trees. I go there every weekend because it is very good for relaxing. My friend also likes this place, so we go together. We sit and talk and sometimes we eat some food. The park is very beautiful and very clean. I like it because it is quiet. In the city there is a lot of noise and there are many people, so I like to go to the park. I think everybody should go to the park because it is good."
+}

@@ -1,0 +1,23 @@
+{
+  "name": "ielts-speaking-coach",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "IELTS Speaking examiner, marker and coach powered by OpenAI",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test evals/lib/text.test.js evals/repair.score.test.js",
+    "eval": "node evals/run.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "openai": "^7.10.0",
+    "ws": "^8.18.3",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

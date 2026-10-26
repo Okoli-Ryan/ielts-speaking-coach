@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Record eval clips</title>
+  <style>
+    :root { color-scheme: light dark; --line: #8884; --accent: #2563eb; }
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 44rem; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.3rem; margin-bottom: .25rem; }
+    .hint { opacity: .75; margin-top: 0; }
+    ol { padding: 0; list-style: none; display: grid; gap: .5rem; }
+    li { border: 1px solid var(--line); border-radius: 8px; padding: .75rem 1rem; }
+    li.done { border-color: #16a34a88; }
+    li.active { border-color: var(--accent); box-shadow: 0 0 0 2px #2563eb33; }
+    .focus { font-size: .8rem; opacity: .65; }
+    .script { font-size: 1.1rem; margin: .4rem 0; }
+    .heard { font-size: .85rem; opacity: .8; margin: .4rem 0 0; }
+    button { font: inherit; padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--line); cursor: pointer; background: transparent; color: inherit; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.stop { background: #dc2626; border-color: #dc2626; color: #fff; }
+    #msg { min-height: 1.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Record eval clips</h1>
+  <p class="hint">
+    Read each line <strong>exactly as written</strong>, including the mistakes and the "um"s.
+    The point is to test whether the transcript keeps what you really said.
+    Use Chrome or Edge. Audio and transcripts stay in <code>evals/clips/recordings/</code> and are git-ignored.
+  </p>
+  <div id="msg" aria-live="polite"></div>
+  <ol id="list"><li>Loading the lines to read… If this stays here, the page script did not load: hard-refresh (Ctrl+Shift+R) and check the address is the one the server printed.</li></ol>
+  <script type="module" src="/capture.js"></script>
+</body>
+</html>

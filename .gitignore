@@ -1,0 +1,13 @@
+node_modules/
+.env
+data/
+
+# Eval audio holds your voice; keep it local
+evals/clips/recordings/*
+!evals/clips/recordings/.gitkeep
+
+# Pipeline working files
+pipeline-state.md
+article-*.md
+linkedin-post.md
+docs/screenshots/*.tmp

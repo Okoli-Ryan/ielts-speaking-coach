@@ -1,0 +1,105 @@
+[
+  {
+    "id": "receipt-for-recipe",
+    "note": "Recogniser error to fix. The singular after 'many' is the candidate's, and must survive the fix.",
+    "turns": ["My mother cook many receipt for me when I was a child."],
+    "mustFix": [{ "from": "receipt", "to": "recipe" }],
+    "mustKeep": ["cook many"],
+    "forbid": ["many recipes", "mother cooks", "mother cooked"]
+  },
+  {
+    "id": "college-for-colleague",
+    "note": "Mis-hearing next to a grammar slip that must stay.",
+    "turns": ["I usually talk to my college about the weekend. He don't like football."],
+    "mustFix": [{ "from": "college", "to": "colleague" }],
+    "mustKeep": ["he don't like"],
+    "forbid": ["doesn't like", "does not like"]
+  },
+  {
+    "id": "bang-for-bank",
+    "note": "One real mis-hearing and one candidate error in the same sentence.",
+    "turns": ["I work in a bang near my house and I am work there since two years."],
+    "mustFix": [{ "from": "bang", "to": "bank" }],
+    "mustKeep": ["i am work", "since two years"],
+    "forbid": ["i am working", "for two years"]
+  },
+  {
+    "id": "mangled-terms",
+    "note": "Technical terms split into non-words.",
+    "turns": ["I work with post gress Q L and Cooper Netties every day."],
+    "mustFix": [
+      { "from": "post gress Q L", "to": "PostgreSQL" },
+      { "from": "Cooper Netties", "to": "Kubernetes" }
+    ],
+    "mustKeep": [],
+    "forbid": []
+  },
+  {
+    "id": "split-word",
+    "note": "A split word that is clearly an artefact.",
+    "turns": ["There is some thing I really enjoy about living near the sea."],
+    "mustFix": [{ "from": "some thing", "to": "something" }],
+    "mustKeep": ["there is"],
+    "forbid": []
+  },
+  {
+    "id": "grammar-only",
+    "note": "Nothing the recogniser got wrong. Every error is the candidate's. Correct output is no change.",
+    "turns": ["Yesterday I buy a new phone because the old one was break. It is more fast than before."],
+    "expectUnchanged": true,
+    "mustFix": [],
+    "mustKeep": ["i buy a new phone", "was break", "more fast"],
+    "forbid": ["bought", "was broken", "faster"]
+  },
+  {
+    "id": "plurals-and-agreement",
+    "note": "Acoustically plausible, grammatically wrong: leave it.",
+    "turns": ["She buy two book at the market and there is three bedroom in my flat."],
+    "expectUnchanged": true,
+    "mustFix": [],
+    "mustKeep": ["she buy two book", "there is three bedroom"],
+    "forbid": ["two books", "three bedrooms", "she buys"]
+  },
+  {
+    "id": "fillers-and-false-starts",
+    "note": "Hesitation is evidence for Fluency. It must not be cleaned away.",
+    "turns": ["I want to, I mean I would like to travel to, to Japan because the food is very, um, delicious."],
+    "expectUnchanged": true,
+    "mustFix": [],
+    "mustKeep": ["i want to i mean", "to to japan", "um"],
+    "forbid": []
+  },
+  {
+    "id": "clean-fluent",
+    "note": "Control. Already correct, so nothing should change.",
+    "turns": ["Social media has changed the way people communicate, although it has arguably made relationships more superficial."],
+    "expectUnchanged": true,
+    "mustFix": [],
+    "mustKeep": [],
+    "forbid": []
+  },
+  {
+    "id": "tense-next-to-mishearing",
+    "note": "Fix the word, keep the wrong tense attached to it.",
+    "turns": ["I have went to see my college last week."],
+    "mustFix": [{ "from": "college", "to": "colleague" }],
+    "mustKeep": ["i have went"],
+    "forbid": ["i went", "i have gone"]
+  },
+  {
+    "id": "index-alignment",
+    "note": "Three turns in one call. Each must come back at its own index, with only the middle one changed.",
+    "turns": [
+      "I am work as a developer.",
+      "My mother cook many receipt for me.",
+      "He don't like football."
+    ],
+    "expectChangedTurns": [1],
+    "mustFix": [{ "turn": 1, "from": "receipt", "to": "recipe" }],
+    "mustKeep": [
+      { "turn": 0, "phrase": "i am work" },
+      { "turn": 2, "phrase": "he don't like" }
+    ],
+    "forbid": []
+  }
+]

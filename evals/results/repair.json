@@ -1,0 +1,397 @@
+{
+  "ranAt": "2026-10-26T10:42:36.247Z",
+  "runs": 1,
+  "model": "gpt-5.6-sol",
+  "summary": {
+    "recall": 1,
+    "preservation": 1,
+    "falseEditRate": 0,
+    "cases": 11,
+    "runs": 1
+  },
+  "checks": [
+    {
+      "name": "every call returned a result",
+      "hard": true,
+      "pass": true,
+      "detail": "0 of 11 failed"
+    },
+    {
+      "name": "candidate errors preserved",
+      "hard": true,
+      "pass": true,
+      "detail": "100.0%"
+    },
+    {
+      "name": "no edits where nothing was misheard",
+      "hard": true,
+      "pass": true,
+      "detail": "0.0%"
+    },
+    {
+      "name": "recogniser errors fixed (floor 75.0%)",
+      "hard": false,
+      "pass": true,
+      "detail": "100.0%"
+    }
+  ],
+  "failures": [],
+  "perCase": [
+    "receipt-for-recipe: 1/1",
+    "college-for-colleague: 1/1",
+    "bang-for-bank: 1/1",
+    "mangled-terms: 1/1",
+    "split-word: 1/1",
+    "grammar-only: 1/1",
+    "plurals-and-agreement: 1/1",
+    "fillers-and-false-starts: 1/1",
+    "clean-fluent: 1/1",
+    "tense-next-to-mishearing: 1/1",
+    "index-alignment: 1/1"
+  ],
+  "data": [
+    {
+      "id": "receipt-for-recipe",
+      "original": [
+        "My mother cook many receipt for me when I was a child."
+      ],
+      "corrected": [
+        "My mother cook many recipe for me when I was a child."
+      ],
+      "fixes": [
+        {
+          "label": "receipt -> recipe",
+          "pass": true
+        }
+      ],
+      "guards": [
+        {
+          "label": "keeps \"cook many\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"many recipes\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"mother cooks\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"mother cooked\"",
+          "pass": true
+        }
+      ],
+      "changedTurns": [
+        0
+      ]
+    },
+    {
+      "id": "college-for-colleague",
+      "original": [
+        "I usually talk to my college about the weekend. He don't like football."
+      ],
+      "corrected": [
+        "I usually talk to my colleague about the weekend. He don't like football."
+      ],
+      "fixes": [
+        {
+          "label": "college -> colleague",
+          "pass": true
+        }
+      ],
+      "guards": [
+        {
+          "label": "keeps \"he don't like\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"doesn't like\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"does not like\"",
+          "pass": true
+        }
+      ],
+      "changedTurns": [
+        0
+      ]
+    },
+    {
+      "id": "bang-for-bank",
+      "original": [
+        "I work in a bang near my house and I am work there since two years."
+      ],
+      "corrected": [
+        "I work in a bank near my house and I am work there since two years."
+      ],
+      "fixes": [
+        {
+          "label": "bang -> bank",
+          "pass": true
+        }
+      ],
+      "guards": [
+        {
+          "label": "keeps \"i am work\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"since two years\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"i am working\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"for two years\"",
+          "pass": true
+        }
+      ],
+      "changedTurns": [
+        0
+      ]
+    },
+    {
+      "id": "mangled-terms",
+      "original": [
+        "I work with post gress Q L and Cooper Netties every day."
+      ],
+      "corrected": [
+        "I work with PostgreSQL and Kubernetes every day."
+      ],
+      "fixes": [
+        {
+          "label": "post gress Q L -> PostgreSQL",
+          "pass": true
+        },
+        {
+          "label": "Cooper Netties -> Kubernetes",
+          "pass": true
+        }
+      ],
+      "guards": [],
+      "changedTurns": [
+        0
+      ]
+    },
+    {
+      "id": "split-word",
+      "original": [
+        "There is some thing I really enjoy about living near the sea."
+      ],
+      "corrected": [
+        "There is something I really enjoy about living near the sea."
+      ],
+      "fixes": [
+        {
+          "label": "some thing -> something",
+          "pass": true
+        }
+      ],
+      "guards": [
+        {
+          "label": "keeps \"there is\"",
+          "pass": true
+        }
+      ],
+      "changedTurns": [
+        0
+      ]
+    },
+    {
+      "id": "grammar-only",
+      "original": [
+        "Yesterday I buy a new phone because the old one was break. It is more fast than before."
+      ],
+      "corrected": [
+        "Yesterday I buy a new phone because the old one was break. It is more fast than before."
+      ],
+      "fixes": [],
+      "guards": [
+        {
+          "label": "keeps \"i buy a new phone\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"was break\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"more fast\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"bought\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"was broken\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"faster\"",
+          "pass": true
+        },
+        {
+          "label": "changes nothing",
+          "pass": true
+        }
+      ],
+      "changedTurns": []
+    },
+    {
+      "id": "plurals-and-agreement",
+      "original": [
+        "She buy two book at the market and there is three bedroom in my flat."
+      ],
+      "corrected": [
+        "She buy two book at the market and there is three bedroom in my flat."
+      ],
+      "fixes": [],
+      "guards": [
+        {
+          "label": "keeps \"she buy two book\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"there is three bedroom\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"two books\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"three bedrooms\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"she buys\"",
+          "pass": true
+        },
+        {
+          "label": "changes nothing",
+          "pass": true
+        }
+      ],
+      "changedTurns": []
+    },
+    {
+      "id": "fillers-and-false-starts",
+      "original": [
+        "I want to, I mean I would like to travel to, to Japan because the food is very, um, delicious."
+      ],
+      "corrected": [
+        "I want to, I mean I would like to travel to, to Japan because the food is very, um, delicious."
+      ],
+      "fixes": [],
+      "guards": [
+        {
+          "label": "keeps \"i want to i mean\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"to to japan\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"um\"",
+          "pass": true
+        },
+        {
+          "label": "changes nothing",
+          "pass": true
+        }
+      ],
+      "changedTurns": []
+    },
+    {
+      "id": "clean-fluent",
+      "original": [
+        "Social media has changed the way people communicate, although it has arguably made relationships more superficial."
+      ],
+      "corrected": [
+        "Social media has changed the way people communicate, although it has arguably made relationships more superficial."
+      ],
+      "fixes": [],
+      "guards": [
+        {
+          "label": "changes nothing",
+          "pass": true
+        }
+      ],
+      "changedTurns": []
+    },
+    {
+      "id": "tense-next-to-mishearing",
+      "original": [
+        "I have went to see my college last week."
+      ],
+      "corrected": [
+        "I have went to see my colleague last week."
+      ],
+      "fixes": [
+        {
+          "label": "college -> colleague",
+          "pass": true
+        }
+      ],
+      "guards": [
+        {
+          "label": "keeps \"i have went\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"i went\"",
+          "pass": true
+        },
+        {
+          "label": "never writes \"i have gone\"",
+          "pass": true
+        }
+      ],
+      "changedTurns": [
+        0
+      ]
+    },
+    {
+      "id": "index-alignment",
+      "original": [
+        "I am work as a developer.",
+        "My mother cook many receipt for me.",
+        "He don't like football."
+      ],
+      "corrected": [
+        "I am work as a developer.",
+        "My mother cook many recipe for me.",
+        "He don't like football."
+      ],
+      "fixes": [
+        {
+          "label": "receipt -> recipe",
+          "pass": true
+        }
+      ],
+      "guards": [
+        {
+          "label": "keeps \"i am work\"",
+          "pass": true
+        },
+        {
+          "label": "keeps \"he don't like\"",
+          "pass": true
+        },
+        {
+          "label": "only turns [1] change",
+          "pass": true
+        }
+      ],
+      "changedTurns": [
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "ranAt": "2026-10-26T10:35:57.957Z",
+  "runs": 1,
+  "model": "gpt-5.6-sol",
+  "summary": {
+    "weak": 5.5,
+    "mid": 7,
+    "strong": 7.5,
+    "garbledPenalty": 0.5,
+    "repairedVsOriginal": 0,
+    "tidyingInflation": 0,
+    "tidyingGrammarInflation": 0.5
+  },
+  "checks": [
+    {
+      "name": "weak < mid < strong",
+      "hard": true,
+      "pass": true,
+      "detail": "5.5 < 7 < 7.5"
+    },
+    {
+      "name": "each answer lands in its written range",
+      "hard": false,
+      "pass": true,
+      "detail": "weak 5.5 [4.5,5.5], mid 7 [6,7], strong 7.5 [7.5,9]"
+    },
+    {
+      "name": "repair does not inflate the mark (tolerance 0.5)",
+      "hard": true,
+      "pass": true,
+      "detail": "overall 7 -> 7, grammar 7 -> 7"
+    },
+    {
+      "name": "demonstration: tidying grammar would raise Grammatical Range",
+      "hard": false,
+      "pass": true,
+      "detail": "grammar 5 -> 5.5, overall 5.5 -> 5.5"
+    }
+  ],
+  "failures": [],
+  "data": {
+    "repairedMid": "I'd like to talk about a lake outside the city that I visited a few years ago with my cousins. It's about two hours from where I live, so we usually goes on a Saturday morning. What I really enjoy is that it's so peaceful compared with the city, which can get quite stressful. We normally rent a small boat and just drift around, and then we have lunch at a little restaurant by the water. The last time I went, it rained halfway through, but we stayed anyway, which was actually fun. I'd say the main reason I like it is that it helps me switch off from work, so I come back feeling much more relaxed than when I left.",
+    "marks": {
+      "weak": {
+        "label": "weak",
+        "overall": 5.5,
+        "grammar": 5,
+        "lexical": 5
+      },
+      "mid": {
+        "label": "mid",
+        "overall": 7,
+        "grammar": 7,
+        "lexical": 7
+      },
+      "strong": {
+        "label": "strong",
+        "overall": 7.5,
+        "grammar": 8,
+        "lexical": 8
+      },
+      "mid (garbled)": {
+        "label": "mid (garbled)",
+        "overall": 6.5,
+        "grammar": 7,
+        "lexical": 7
+      },
+      "mid (garbled, repaired)": {
+        "label": "mid (garbled, repaired)",
+        "overall": 7,
+        "grammar": 7,
+        "lexical": 7
+      },
+      "weak (tidied)": {
+        "label": "weak (tidied)",
+        "overall": 5.5,
+        "grammar": 5.5,
+        "lexical": 5
+      }
+    }
+  }
+}
