@@ -71,7 +71,7 @@ app.get("/api/config", async (_req, res) => {
 /**
  * Re-transcribes a saved recording with a real speech-to-text model. The browser's
  * Web Speech API is convenient and free but error-prone, and it tends to tidy speech
- * into fluent prose; this reads the actual audio and is steered to stay verbatim.
+ * into fluent prose; this reads the actual audio and is asked to stay verbatim, which it does not reliably do (see evals/results).
  * Audio arrives as a raw body rather than over the socket - it is binary and large.
  */
 app.post(

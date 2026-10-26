@@ -31,7 +31,7 @@ export function reasoning(model, effort) {
   return model.effort === null ? {} : { reasoning: { effort } };
 }
 
-/** Reads the audio itself, steered to stay verbatim. Returns the transcript text. */
+/** Reads the audio itself, asking for a verbatim transcript. The model does not always comply (see evals/results). Returns the transcript text. */
 export async function transcribeAudio(
   client,
   audio,
