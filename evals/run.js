@@ -68,6 +68,11 @@ const needs = { repair: provider, marker: provider, transcribe: getProvider("ope
 
 const selected = wanted.length ? ALL.filter((e) => wanted.includes(e.name)) : ALL;
 
+// A run on a model other than the default gets its own file, so it never overwrites the baseline.
+const MODEL_EVALS = new Set(["repair", "marker"]);
+const resultName = (name) =>
+  [name, usesVariant(name) ? variant : null, values.model && MODEL_EVALS.has(name) ? values.model : null].filter(Boolean).join(".");
+
 const usesVariant = (evalName) => Boolean(variant && VARIANTS[evalName]?.includes(variant));
 
 let hardFailures = 0;
@@ -111,7 +116,7 @@ for (const evalModule of selected) {
   for (const f of result.failures) console.log(`    ! ${f}`);
   if (runs > 1 && result.perCase) console.log(`  per case: ${result.perCase.join(", ")}`);
 
-  const file = saveResult(usesVariant(evalModule.name) ? `${evalModule.name}.${variant}` : evalModule.name, { ranAt: new Date().toISOString(), runs, ...result });
+  const file = saveResult(resultName(evalModule.name), { ranAt: new Date().toISOString(), runs, ...result });
   console.log(`  saved ${file}`);
 }
 

@@ -29,10 +29,11 @@ With only an Anthropic key the app starts on a Claude model and works from the b
 transcript: the "Transcribe audio before marking" option is switched off, because Anthropic has
 no speech-to-text model. Add an OpenAI key later and it comes back.
 
-> **Tested status.** The OpenAI path is what the evals and the write-up ran on. The Anthropic
-> path passes its offline tests against a stand-in SDK and its request shapes were checked against
-> the SDK's typings, but it has **not been run against the live Anthropic API**, and an
-> Anthropic-only setup has not been run end to end. If you try it, tell me what breaks.
+> **Tested status.** The OpenAI path is what the evals and the write-up ran on. **Claude Sonnet 5.5**
+> has been run live through the app (examiner turns, question papers, cue cards) and through the
+> repair and marker evals, once each; the results are in `evals/results/*.claude-sonnet-5-5.json`.
+> The other Claude models in the picker have not been run, and an Anthropic-only setup (no OpenAI
+> key at all) has not been run end to end. If you try them, tell me what breaks.
 
 ## How it works
 
@@ -315,9 +316,9 @@ npm run eval -- marker --model claude-sonnet-5-5
 npm run eval -- repair --model claude-sonnet-5-5
 ```
 
-The Claude entries ship **untested as markers**: the evals above were built and run against
-OpenAI models, and the Anthropic provider has so far been exercised only against a stand-in SDK
-in the test suite (`npm test`), not against the live API.
+Only Claude Sonnet 5.5 has been checked as a marker here, once. On the same three answers it gave
+lower bands than GPT-5.6 Sol (4.5, 6 and 7 against 5.5, 7 and 7.5), so do not compare bands across
+models. The other Claude entries have not been run.
 
 ## Waiting, and the clocks
 

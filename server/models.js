@@ -51,7 +51,7 @@ export const MODEL_CATALOG = [
     id: "claude-sonnet-5-5",
     provider: "anthropic",
     label: "Claude Sonnet 5.5",
-    note: "Not yet checked as a marker here. Run npm run eval -- marker --model claude-sonnet-5-5 before trusting its bands.",
+    note: "Run once through the app and the repair and marker evals. Marked lower than GPT-5.6 Sol on the same answers, so do not compare bands across models.",
     effort: "low",
   },
   {
